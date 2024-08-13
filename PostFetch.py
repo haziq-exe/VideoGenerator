@@ -6,9 +6,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Replace these with your own credentials
-client_id = os.environ('REDDIT_CLIENTID')
-client_secret = os.environ('REDDIT_CLIENT_SECRET')
-user_agent = os.environ('REDDIT_USER')
+client_id = os.environ['REDDIT_CLIENTID']
+client_secret = os.environ['REDDIT_CLIENT_SECRET']
+user_agent = os.environ['REDDIT_USER']
 
 # Initialize the Reddit instance
 reddit = praw.Reddit(
