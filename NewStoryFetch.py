@@ -1,70 +1,66 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from Prompts import DrugPrompt
-import time
+from playwright.sync_api import sync_playwright
+from Prompts import DrugPrompt, RageBaitPrompt, WritingPrompt, WorkIssuePrompt, TragicLoversStory, TragicManhoodPrompt, LostTeenageBoy, AskRedditType, DifferentMemoryPrompt, DudeUplifting, LongDistance, FamilySecretPrompt
+import numpy as np
+
+Prompts = {
+        "AskReddit" :[AskRedditType, 0.35],
+        "WritingPrompt" : [WritingPrompt, 0.35],
+        "Drugs" : [DrugPrompt, 0.03], #Hard coded yes but what can you do, [Prompt, Prompt_Probability]
+        "RageBait" : [RageBaitPrompt, 0.03], 
+        "WorkIssue" : [WorkIssuePrompt, 0.03],
+        "TragicLover" : [TragicLoversStory, 0.03],
+        "TragicManhood" : [TragicManhoodPrompt, 0.03],
+        "LostTeenageBoy" : [LostTeenageBoy, 0.03],
+        "DifferentMemory" :[DifferentMemoryPrompt, 0.03],
+        "DudeUplifting" : [DudeUplifting, 0.03],
+        "LongDistance" : [LongDistance, 0.03],
+        "FamilySecret" : [FamilySecretPrompt, 0.03]}
 
 
-def FetchStory(prompt_type = "Drug", numberofposts=2):
+def FetchStory(prompt_type=None, numberofposts=2):
 
-    chromedriver_path = '/Users/haziq/Desktop/TikTokGenerator/chromedriver/chromedriver'
-    chrome_options = Options()
-    chrome_options.add_argument('--headless')  # Run in headless mode
-    chrome_options.add_argument('--no-sandbox')
+    prompta = []
 
-    service = Service(chromedriver_path)
-    driver = webdriver.Chrome(service=service, options=chrome_options)
+    
+    if prompt_type != None:
+        if len(prompt_type) != numberofposts:
+            print("ERROR: elements in prompt_type must match number of posts")
+        for i in range(len(prompt_type)):
+            prompt.append(Prompts[prompt_type[i]][0])
+    else:
+        ListPrompts = np.array(list(Prompts.values()))
+        elements = ListPrompts[:, 0]
+        probabilities = ListPrompts[:, 1]
+        probabilities = np.array(probabilities, dtype=float)
+        for i in range(numberofposts):
+            num = np.random.choice(elements, p=probabilities)
+            prompta.append(num)
 
 
     Script = []
     Title = []
-    for i in range(numberofposts):
-        ScriptTemp = []
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
+        url = 'https://toolbaz.com/writer/ai-story-generator'
 
-        if prompt_type == "Drug":
-            prompt_type = DrugPrompt
+        for prompt in Prompts:
+            page.goto(url)
+            page.wait_for_timeout(2000)
+            page.fill('textarea#input', prompt)
+            page.wait_for_timeout(3000)          
+            page.click('button#main_btn')
+            page.wait_for_timeout(20000)
 
-        # Open the website
-        driver.get('https://toolbaz.com/writer/ai-story-generator')
+            output_div = page.query_selector('#output')
+            if output_div:
+                p_tags = output_div.query_selector_all('p')
+                ScriptTemp = [p.text_content() for p in p_tags]
+                print(ScriptTemp)
+                ScriptWords = " ".join(ScriptTemp)
+                Title.append(ScriptTemp[0])
+                Script.append(ScriptWords)
 
-        WebDriverWait(driver, 3).until(
-            EC.visibility_of_element_located((By.TAG_NAME, 'textarea'))
-        ) 
-
-        # Find the <textarea> element and enter the text
-        textarea = driver.find_element(By.TAG_NAME, 'textarea')
-        textarea.click()
-        textarea.send_keys(DrugPrompt)
-
-        # Find the button with id="main_btn" and click it
-        submit_button = driver.find_element(By.ID, 'main_btn')
-        driver.execute_script("arguments[0].scrollIntoView();", submit_button)
-        submit_button.click()
-
-        # Wait for the response to be generated (adjust the time as needed)
-        time.sleep(10)  # Adjust sleep time based on website's response time
-
-        # Find all <p> tags containing the response
-        output_div = driver.find_element(By.ID, 'output')
-        p_tags = output_div.find_elements(By.TAG_NAME, 'p')
-
-        # Extract and print the text from <p> tags
-        responses = [p.text for p in p_tags]
-        for response in responses:
-            ScriptTemp.append(response)
-
-        driver.quit()
-
-        Script = " ".join(ScriptTemp)
-        Title = ScriptTemp[0]
-        print(Script, Title)
-        ScriptTemp.clear()
-
-        return Script, Title
-
-
-
-FetchStory(numberofposts=1)
+        browser.close()
+        
+    return Script, Title
