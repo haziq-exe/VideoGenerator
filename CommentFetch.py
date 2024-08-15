@@ -70,10 +70,12 @@ replacement_dict = {
     "retard" : "ret**d",
     "bitch": "b**tch",
     "rape":"r**e",
-    # "kill":"k*ll",
+    "kill":"k*ll",
     "murder":"m**der",
     "sexually":"s*xually",
-    "assaulted": "as**ulted"
+    "assaulted": "as**ulted",
+    'beat': 'b*at',
+    'nude': 'n*de'
 }
 
 
