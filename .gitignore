@@ -172,7 +172,6 @@ str_scripts/
 token.pickle
 PressTheButton/FinalVid
 PressTheButton/audio
-Testin.ipynb
 *.json
 PressTheButton/Images
 PressTheButton/LongVid
