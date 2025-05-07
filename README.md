@@ -6,7 +6,7 @@
 
 ## Features
 
-VideoGenerator produces the following types of TikToks:
+VideoGenerator produces the following types of Videos:
 
 ### Will You Push The Button?
    Creates a fun, decision-making game where viewers decide whether they would "push the button" based on an ethical dilemma or hypothetical situation.
