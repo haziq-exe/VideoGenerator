@@ -47,22 +47,22 @@ VideoGenerator produces the following types of Videos:
 Each type of VideoGenerator content follows its own unique pipeline:
 1. **Reddit TTS Story Video**: 
    - Fetches a Reddit post (from subreddit and time frame of choosing).
-   - Converts the text to speech.
-   - Creates a Post title image.
-   - Generates a video with background visuals and the TTS narration.
+   - Generates a narration audio file through a text to speech AI model.
+   - Creates an engaging Post title image.
+   - Generates a video with background visuals, subtitles and TTS narration.
 
 2. **Will You Push The Button?**: 
    - Fetches scenarios from [Will You Press The Button?](https://willyoupressthebutton.com)
    - Uses LLM to create image generation prompts, based off the scenarios, that will be fed into text to image AI
    - Feeds afore-mentioned prompts into text to image AI and generates Images
-   - Creates text for each scenario
+   - Creates text to be displayed for each scenario
    - Generates a video with background visuals, audio and text
    - Speeds up video to be less than 60 seconds
    - Uploads to shorts using Google's Youtube Uploader API
      
 3. **Reddit Horror Story Comments**: 
    - Scrapes horror-related Reddit comments.
-   - Creates comment images for each reddit comment.
+   - Creates dynamic comment images for each reddit comment.
 
 ## Installation & Usage
 
