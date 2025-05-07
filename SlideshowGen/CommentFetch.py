@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 import praw
 import os
 import re
+import sys
 
 load_dotenv()
 
@@ -26,11 +27,12 @@ def load_comments(numofcomments):
     Comments = []
     Question = []
     UrlFound = False
+    count = 0
 
-    with open('/Users/haziq/Desktop/TikTokGenerator/PostManagement/CompletedPosts.txt', 'r') as complete_fileR:
+    with open('/Users/haziq/Desktop/TikTokGenerator/RedditTypeVideo/PostManagement/CompletedPosts.txt', 'r') as complete_fileR:
         complete = complete_fileR.readlines()
 
-    with open('/Users/haziq/Desktop/TikTokGenerator/PostManagement/SlideshowPosts.txt', 'r') as slideshow_file:
+    with open('/Users/haziq/Desktop/TikTokGenerator/RedditTypeVideo//PostManagement/SlideshowPosts.txt', 'r') as slideshow_file:
         url = slideshow_file.readline()
         while UrlFound == False:
             if url not in complete:
@@ -38,21 +40,27 @@ def load_comments(numofcomments):
                 UrlFound = True
                 submission = reddit.submission(url=url)
                 submission.comment_sort = 'top'
-                submission.comments.replace_more(limit=numofcomments)
-                Question.append(submission.title)
-                top_comments = submission.comments.list()[:numofcomments]
+                top_comments = []
+                while len(top_comments) < numofcomments:
+                    submission.comments.replace_more(limit=numofcomments+count)
+                    Question.append(submission.title)
+                    comments = submission.comments.list()[:numofcomments]
+                    top_comments = [comment for comment in comments if comment.parent_id == comment.link_id]
+                    count += 1
                 for comment in top_comments:
                     Comments.append(comment.body)
-                with open('/Users/haziq/Desktop/TikTokGenerator/PostManagement/CompletedPosts.txt', 'a') as complete_fileW:
+                with open('/Users/haziq/Desktop/TikTokGenerator/RedditTypeVideo/PostManagement/CompletedPosts.txt', 'a') as complete_fileW:
                     complete_fileW.write(url + "\n")
             else:
                 url = slideshow_file.readline()
             if url == "":
-                return print("NO MORE NEW QUESTIONS IN FILE")
+                return sys.exit("NO MORE NEW QUESTIONS IN FILE")
     
 
     while "[deleted]" in Comments:
         Comments.remove("[deleted]")
+    while "[removed]" in Comments:
+        Comments.remove("[removed]")
 
     for i in range(len(Comments)):
         text = Comments[i]
@@ -75,7 +83,17 @@ replacement_dict = {
     "sexually":"s*xually",
     "assaulted": "as**ulted",
     'beat': 'b*at',
-    'nude': 'n*de'
+    'nude': 'n*de',
+    'blood':'bl*od',
+    'suicide':'su**ide',
+    'die':'d*e',
+    'porn':'p*rn',
+    'torture': 't*rture',
+    'maimed': 'm*imed',
+    'rapist': 'rap*st',
+    'slit': 's.l.i.t',
+    'cannibal': 'cann*bal',
+    'raping': 'ra*ing'
 }
 
 

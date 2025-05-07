@@ -164,12 +164,22 @@ PostManagement/
 RedundantCode/
 speeches/
 tempaudios/
+PressTheButton/VidElements
+client_secret_365780065783-2mi7obddfpn7cihl0frrtji80bh10okk.apps.googleusercontent.com.json
+SlideshowGen/Slideshows
+proxy-list.txt
 str_scripts/
 token.pickle
+PressTheButton/FinalVid
+PressTheButton/audio
 Testin.ipynb
+*.json
+PressTheButton/Images
+PressTheButton/LongVid
 token.pickle
 cookies.txt
 .DS_Store
+user_data
 testvid.mp4
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
