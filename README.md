@@ -2,7 +2,7 @@
 
 **VideoGenerator** is a Python-based project designed to showcase creative automated video creation. This repository generates three types of videos, each with a unique theme and content format.
 
-**While the code is public, it has not been designed in a way that allows is to be ready to use for users to be able to clone and generate videos independently.**
+**While the code is public, it has not been modified to be ready to use for users to clone and generate videos independently.**
 
 ## Features
 
